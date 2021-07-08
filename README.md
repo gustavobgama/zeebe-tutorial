@@ -22,8 +22,8 @@ You can check the Operate running [here](http://localhost:8080) (demo/demo).
 ## Install the PHP client implementation
 
 ```shell
-$ git clone https://github.com/gustavobgama/change-data-capture.git
-$ cd change-data-capture && docker-compose up -d
+$ git clone https://github.com/gustavobgama/zeebe-tutorial.git
+$ cd zeebe-tutorial && docker-compose up -d
 ```
 
 # Step by step
