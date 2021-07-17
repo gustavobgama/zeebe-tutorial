@@ -3,11 +3,46 @@ version: '3.8'
 services: 
   php:
     build: ./
+    image: zeebe-tutorial-php
     volumes:
       - .:/app
     networks:
-      - operate_zeebe_network
+      - simple-monitor_zeebe_network
+
+  composer:
+    image: zeebe-tutorial-php
+    entrypoint: composer
+    command: install
+    volumes:
+      - .:/app
+
+  process-deploy:
+    image: zeebe-tutorial-php
+    command: php artisan process:deploy
+    restart: on-failure
+    volumes:
+      - .:/app
+    networks:
+      - simple-monitor_zeebe_network
+
+  order-payment:
+    image: zeebe-tutorial-php
+    command: php artisan order:payment
+    restart: on-failure
+    volumes:
+      - .:/app
+    networks:
+      - simple-monitor_zeebe_network
+
+  order-shipment:
+    image: zeebe-tutorial-php
+    command: php artisan order:shipment
+    restart: on-failure
+    volumes:
+      - .:/app
+    networks:
+      - simple-monitor_zeebe_network
 
 networks:
-  operate_zeebe_network:
+  simple-monitor_zeebe_network:
     external: true

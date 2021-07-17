@@ -21,5 +21,3 @@ COPY . /app
 RUN composer dump-autoload --no-scripts --optimize \
     && rm -rf /root/.composer \
     && apk del ${PHPIZE_DEPS} linux-headers
-
-ENTRYPOINT ["./docker-entrypoint.sh"]

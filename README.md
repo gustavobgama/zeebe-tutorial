@@ -1,23 +1,26 @@
 # Description
 
-PHP implementation of the Camunda official [Zeebe tutorial](https://docs.camunda.io/docs/product-manuals/zeebe/deployment-guide/getting-started/index/). Instead of using the `zbctl` client as in the tutorial this repository has a PHP gRPC integration with Zeebe. Integration was very easy because of this [client](https://github.com/radek-baczynski/zeebe-php-client).  
+PHP implementation of the Camunda official [Zeebe tutorial](https://docs.camunda.io/docs/product-manuals/zeebe/deployment-guide/getting-started/index/). Instead of using the `zbctl` client as in the tutorial this repository has a PHP gRPC integration with Zeebe. Integration was very easy because of this [client](https://github.com/radek-baczynski/zeebe-php-client). The tutorial refers to the following business workflow.
+
+![Business workflow](https://docs.camunda.io/assets/images/tutorial-3.0-complete-process-ccad27bdd9f510d4fd1314ae560ffff0.png)
 
 # Installation
 
 ## Pre requisites
 
-[Docker](https://docs.docker.com/engine/install/) and [docker compose](https://docs.docker.com/compose/install/) are pre requisites and must be installed.
+* [Docker](https://docs.docker.com/engine/install/)
+* [Docker compose](https://docs.docker.com/compose/install/)
 
-## Zeebe and Operate up and running
+## Zeebe and Simple Monitor up and running
 
-Clone the [docker-compose Zeebe](https://github.com/camunda-community-hub/zeebe-docker-compose) project and start it using the `operate` profile:
+Clone the [docker-compose Zeebe](https://github.com/camunda-community-hub/zeebe-docker-compose) project and start it using the `simple-monitor` profile:
 
 ```shell
 $ git clone git@github.com:camunda-community-hub/zeebe-docker-compose.git
-$ cd zeebe-docker-compose/operate && docker-compose up -d
+$ cd zeebe-docker-compose/simple-monitor && docker-compose up -d
 ```
 
-You can check the Operate running [here](http://localhost:8080) (demo/demo).
+You can check the Zeebe Simple Monitor running [here](http://localhost:8082). You can use this tool to follow the execution of every order and see at what step the proccess is at any time.
 
 ## Install the PHP client implementation
 
@@ -28,27 +31,41 @@ $ cd zeebe-tutorial && docker-compose up -d
 
 # Step by step
 
-## Deploy the order process
+## What docker-compose up does ?
+
+First it deploys the order process with the command `php artisan process:deploy`. Besides it also starts the following two workers:
+
+    php artisan order:payment
+
+Mock responsible for process the task `Initiate payment`. 
+
+    php artisan order:shipment
+
+Mock responsible for process both tasks `Shipping without insurance` and `Shipping with insurance`. 
+
+## Create an order more expensive than 100
 
 ```shell
-$ docker-compose exec php php artisan process:deploy
+$ docker-compose run php php artisan order:create --id=10 --value=110
 ```
 
-## Start the workers (order payment and shipment): 
+## Receive payment for the created order
 
 ```shell
-$ docker-compose exec php php artisan order:payment
-$ docker-compose exec php php artisan order:shipment
+$ docker-compose run php php artisan order:payment-received --id=10
 ```
-
-## Create an order
+## Create an order cheaper than 100
 
 ```shell
-$ docker-compose exec php php artisan order:create --id=10 --value=100
+$ docker-compose run php php artisan order:create --id=11 --value=90
 ```
 
-## Receive payment received message (for the created order)
+## Receive payment for the created order
 
 ```shell
-$ docker-compose exec php php artisan order:payment-received --id=10
+$ docker-compose run php php artisan order:payment-received --id=11
 ```
+
+## Check the results at the monitoring tool
+
+Access the monitoring tool (http://localhost:8082)[http://localhost:8082] and check both orders and its execution flow.
