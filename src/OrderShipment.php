@@ -1,51 +1,41 @@
 <?php
 
-namespace App\Console\Commands;
+namespace GustavoGama\ZeebeTutorialPhp;
 
-use Illuminate\Console\Command;
-use ZeebeClient\ActivateJobsRequest;
-use ZeebeClient\CompleteJobRequest;
-use ZeebeClient\GatewayClient;
+use Symfony\Component\Console\{
+    Command\Command,
+    Input\InputInterface,
+    Output\OutputInterface
+};
+use ZeebeClient\{
+    ActivatedJob,
+    ActivateJobsRequest,
+    ActivateJobsResponse,
+    CompleteJobRequest,
+    GatewayClient
+};
 
 class OrderShipment extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'order:shipment';
+    protected static $defaultName = 'order:shipment';
+    private GatewayClient $client;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Ship the order';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    protected function configure(): void
     {
+        $this->setDescription('Ship the order');
+    }
+
+    public function __construct(GatewayClient $client)
+    {
+        $this->client = $client;
+
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $client = new GatewayClient('zeebe:26500', [
-            'credentials' => \Grpc\ChannelCredentials::createInsecure(),
-        ]);
-
         while (true) {
-            $activeJobs = $client->ActivateJobs(new ActivateJobsRequest([
+            $activeJobs = $this->client->ActivateJobs(new ActivateJobsRequest([
                 'type'              => 'ship-with-insurance',
                 'worker'            => 'order-ship',
                 'maxJobsToActivate' => 1,
@@ -56,17 +46,18 @@ class OrderShipment extends Command
             foreach ($activeJobs->responses() as $response) {
                 /** @var ActivatedJob $job */
                 foreach ($response->getJobs() as $job) {
-                    dump("Ship order with insurance: " . $job->getVariables());
+                    $message = "Ship order with insurance: " . $job->getVariables();
+                    $output->writeln("<info>{$message}</info>");
                     sleep(rand(1, 4));
 
                     $completeRequest = new CompleteJobRequest([
                         'jobKey' => $job->getKey(),
                     ]);
-                    $client->CompleteJob($completeRequest)->wait();
+                    $this->client->CompleteJob($completeRequest)->wait();
                 }
             }
 
-            $activeJobs = $client->ActivateJobs(new ActivateJobsRequest([
+            $activeJobs = $this->client->ActivateJobs(new ActivateJobsRequest([
                 'type'              => 'ship-without-insurance',
                 'worker'            => 'order-ship',
                 'maxJobsToActivate' => 1,
@@ -77,13 +68,14 @@ class OrderShipment extends Command
             foreach ($activeJobs->responses() as $response) {
                 /** @var ActivatedJob $job */
                 foreach ($response->getJobs() as $job) {
-                    dump("Ship order withot insurance: " . $job->getVariables());
+                    $message = "Ship order withot insurance: " . $job->getVariables();
+                    $output->writeln("<info>{$message}</info>");
                     sleep(rand(1, 4));
 
                     $completeRequest = new CompleteJobRequest([
                         'jobKey' => $job->getKey(),
                     ]);
-                    $client->CompleteJob($completeRequest)->wait();
+                    $this->client->CompleteJob($completeRequest)->wait();
                 }
             }
 

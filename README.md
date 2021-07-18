@@ -33,37 +33,37 @@ $ cd zeebe-tutorial && docker-compose up -d
 
 ## What docker-compose up does ?
 
-First it deploys the order process with the command `php artisan process:deploy`. Besides it also starts the following two workers:
+First it deploys the order process with the command `php console process:deploy`. Besides it also starts the following two workers:
 
-    php artisan order:payment
+    php console order:payment
 
 Mock responsible for process the task `Initiate payment`. 
 
-    php artisan order:shipment
+    php console order:shipment
 
 Mock responsible for process both tasks `Shipping without insurance` and `Shipping with insurance`. 
 
 ## Create an order more expensive than 100
 
 ```shell
-$ docker-compose run php php artisan order:create --id=10 --value=110
+$ docker-compose run php ./console order:create --id=10 --value=110
 ```
 
 ## Receive payment for the created order
 
 ```shell
-$ docker-compose run php php artisan order:payment-received --id=10
+$ docker-compose run php ./console order:payment-received --id=10
 ```
 ## Create an order cheaper than 100
 
 ```shell
-$ docker-compose run php php artisan order:create --id=11 --value=90
+$ docker-compose run php ./console order:create --id=11 --value=90
 ```
 
 ## Receive payment for the created order
 
 ```shell
-$ docker-compose run php php artisan order:payment-received --id=11
+$ docker-compose run php ./console order:payment-received --id=11
 ```
 
 ## Check the results at the monitoring tool

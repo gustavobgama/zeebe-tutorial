@@ -18,7 +18,7 @@ services:
 
   process-deploy:
     image: zeebe-tutorial-php
-    command: php artisan process:deploy
+    command: ./console process:deploy
     restart: on-failure
     volumes:
       - .:/app
@@ -27,7 +27,7 @@ services:
 
   order-payment:
     image: zeebe-tutorial-php
-    command: php artisan order:payment
+    command: ./console order:payment
     restart: on-failure
     volumes:
       - .:/app
@@ -36,7 +36,7 @@ services:
 
   order-shipment:
     image: zeebe-tutorial-php
-    command: php artisan order:shipment
+    command: ./console order:shipment
     restart: on-failure
     volumes:
       - .:/app
