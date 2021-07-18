@@ -46,24 +46,24 @@ Mock responsible for process both tasks `Shipping without insurance` and `Shippi
 ## Create an order more expensive than 100
 
 ```shell
-$ docker-compose run php ./console order:create --id=10 --value=110
+$ docker-compose run --rm php ./console order:create --id=10 --value=110
 ```
 
 ## Receive payment for the created order
 
 ```shell
-$ docker-compose run php ./console order:payment-received --id=10
+$ docker-compose run --rm php ./console order:payment-received --id=10
 ```
 ## Create an order cheaper than 100
 
 ```shell
-$ docker-compose run php ./console order:create --id=11 --value=90
+$ docker-compose run --rm php ./console order:create --id=11 --value=90
 ```
 
 ## Receive payment for the created order
 
 ```shell
-$ docker-compose run php ./console order:payment-received --id=11
+$ docker-compose run --rm php ./console order:payment-received --id=11
 ```
 
 ## Check the results at the monitoring tool
