@@ -1,6 +1,6 @@
 # Description
 
-PHP implementation of the Camunda official [Zeebe tutorial](https://docs.camunda.io/docs/product-manuals/zeebe/deployment-guide/getting-started/index/). Instead of using the `zbctl` client as in the tutorial this repository has a PHP gRPC integration with Zeebe. Integration was very easy because of this [client](https://github.com/radek-baczynski/zeebe-php-client). The tutorial refers to the following business workflow.
+PHP implementation of the Camunda official [Zeebe tutorial](https://docs.camunda.io/docs/product-manuals/zeebe/deployment-guide/getting-started/index/). Instead of using the `zbctl` client as in the tutorial this repository has a PHP gRPC integration with Zeebe. Integration was very easy because of this [client](https://github.com/radek-baczynski/zeebe-php-client). The tutorial refers to the following business workflow:
 
 ![Business workflow](https://docs.camunda.io/assets/images/tutorial-3.0-complete-process-ccad27bdd9f510d4fd1314ae560ffff0.png)
 
@@ -68,4 +68,4 @@ $ docker-compose run --rm php ./console order:payment-received --id=11
 
 ## Check the results at the monitoring tool
 
-Access the monitoring tool (http://localhost:8082)[http://localhost:8082] and check both orders and its execution flow.
+Access the monitoring tool [http://localhost:8082](http://localhost:8082) and check both orders and its execution flow.
