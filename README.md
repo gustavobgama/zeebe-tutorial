@@ -31,17 +31,19 @@ $ cd zeebe-tutorial && docker-compose up -d
 
 # Step by step
 
-## What docker-compose up does ?
+## Deploy the process workflow
 
-First it deploys the order process with the command `php console process:deploy`. Besides it also starts the following two workers:
+```shell
+$ docker-compose up process-deploy
+```
 
-    php console order:payment
+## Run the mocks for some tasks
 
-Mock responsible for process the task `Initiate payment`. 
+Simulate the following tasks `Initiate payment`, `Shipping without insurance` and `Shipping with insurance`.
 
-    php console order:shipment
-
-Mock responsible for process both tasks `Shipping without insurance` and `Shipping with insurance`. 
+```shell
+$ docker-compose up order-payment order-shipment
+```
 
 ## Create an order more expensive than 100
 
