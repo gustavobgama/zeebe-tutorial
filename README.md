@@ -37,7 +37,7 @@ $ cd zeebe-tutorial && docker-compose up -d
 $ docker-compose up process-deploy
 ```
 
-## Run the mocks for some tasks
+## Run the mocks for the service tasks
 
 Simulate the following tasks `Initiate payment`, `Shipping without insurance` and `Shipping with insurance`.
 
